@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 50px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        fieldset {
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        input[type="text"], input[type="email"], input[type="date"], input[type="tel"], input[type="url"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: -10px;
+        }
+
+        .success {
+            color: green;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Job Application Form</h2>
+<p>Please fill in your details below:</p>
+
+<form id="jobForm" action="/submit-job-application" method="POST">
+    
+    <!-- Personal Information Section -->
+    <fieldset>
+        <legend>Personal Information</legend>
+        
+        <div class="form-section">
+            <label for="first-name">First Name:</label>
+            <input type="text" id="first-name" name="first_name" required>
+            <div id="first-name-error" class="error"></div>
+        </div>
+        
+        <div class="form-section">
+            <label for="last-name">Last Name:</label>
+            <input type="text" id="last-name" name="last_name" required>
+            <div id="last-name-error" class="error"></div>
+        </div>
+        
+        <div class="form-section">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+            <div id="dob-error" class="error"></div>
+        </div>
+        
+        <div class="form-section">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="^[0-9]{10}$" placeholder="123-456-7890" required>
+            <div id="phone-error" class="error"></div>
+        </div>
+
+        <div class="form-section">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+            <div id="email-error" class="error"></div>
+        </div>
+        
+    </fieldset>
+    
+    <!-- Additional Information Section -->
+    <fieldset>
+        <legend>Additional Information</legend>
+        
+        <div class="form-section">
+            <label for="linkedin">LinkedIn Profile (Optional):</label>
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/your-profile">
+        </div>
+        
+        <div class="form-section">
+            <label for="portfolio">Portfolio Website (Optional):</label>
+            <input type="url" id="portfolio" name="portfolio" placeholder="https://www.your-portfolio.com">
+        </div>
+        
+        <div class="form-section">
+            <label for="referral">How did you hear about us?</label><br>
+            <select id="referral" name="referral" required>
+                <option value="job-board">Job Board</option>
+                <option value="social-media">Social Media</option>
+                <option value="friend">Friend/Referral</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+    </fieldset>
+    
+    <!-- Terms and Conditions Section -->
+    <fieldset>
+        <legend>Agreement</legend>
+        
+        <div class="form-section">
+            <label for="agree">
+                <input type="checkbox" id="agree" name="agree" required>
+                I agree to the <a href="/terms-and-conditions">Terms and Conditions</a>
+            </label>
+        </div>
+        
+    </fieldset>
+    
+    <!-- Submit Button -->
+    <input type="submit" value="Submit Application">
+    <div id="form-status"></div>
+</form>
+
+<script>
+    // Get form and elements
+    const form = document.getElementById("jobForm");
+    const submitButton = document.querySelector("input[type='submit']");
+    const formStatus = document.getElementById("form-status");
+
+    // Validation function
+    function validateForm(event) {
+        event.preventDefault();
+        let isValid = true;
+
+        // Clear previous error messages
+        const errors = document.querySelectorAll(".error");
+        errors.forEach((error) => error.textContent = "");
+
+        // Get values
+        const firstName = document.getElementById("first-name").value.trim();
+        const lastName = document.getElementById("last-name").value.trim();
+        const dob = document.getElementById("dob").value;
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        
+        // Check if the fields are filled out correctly
+        if (!firstName) {
+            isValid = false;
+            document.getElementById("first-name-error").textContent = "First Name is required.";
+        }
+
+        if (!lastName) {
+            isValid = false;
+            document.getElementById("last-name-error").textContent = "Last Name is required.";
+        }
+
+        if (!dob) {
+            isValid = false;
+            document.getElementById("dob-error").textContent = "Date of Birth is required.";
+        }
+
+        const phonePattern = /^[0-9]{10}$/;
+        if (!phone || !phone.match(phonePattern)) {
+            isValid = false;
+            document.getElementById("phone-error").textContent = "Phone number must be 10 digits.";
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !email.match(emailPattern)) {
+            isValid = false;
+            document.getElementById("email-error").textContent = "Invalid email address.";
+        }
+
+        // If all validations passed, submit the form
+        if (isValid) {
+            formStatus.textContent = "Form submitted successfully!";
+            formStatus.classList.remove("error");
+            formStatus.classList.add("success");
+
+            // You can submit the form to your server
+            // form.submit(); // Uncomment to actually submit
+        } else {
+            formStatus.textContent = "Please fix the errors above.";
+            formStatus.classList.remove("success");
+            formStatus.classList.add("error");
+        }
+    }
+
+    // Add event listener to form
+    form.addEventListener("submit", validateForm);
+</script>
+
+</body>
+</html>
